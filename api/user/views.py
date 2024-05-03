@@ -1,7 +1,8 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from api.user.serializer import RestaurantCreateSerializer
+from api.user.serializer import UserCreateSerializer
+from db.models import Role
 from utils.response import CustomResponse
 
 
@@ -10,8 +11,13 @@ class CreateUserAPI(APIView):
 
     def post(self, request):
 
-        serializer = RestaurantCreateSerializer(
-            data=request.data
+        role_id = Role.objects.filter(title='USER').first().id
+
+        serializer = UserCreateSerializer(
+            data=request.data,
+            context={
+                "role_id": role_id
+            }
         )
         if serializer.is_valid():
             serializer.save()

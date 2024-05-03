@@ -5,7 +5,7 @@ from rest_framework import serializers
 from db.models import User, UserRoleLink
 
 
-class RestaurantCreateSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField()
 
     class Meta:
@@ -22,13 +22,15 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
         validated_data['id'] = uuid.uuid4()
         validated_data['username'] = validated_data['email']
         validated_data.pop('confirm_password')
+        user = User.objects.create_user(**validated_data)
 
-        # UserRoleLink.objects.create(
-        #     id=uuid.uuid4(),
-        #     user__id=validated_data['id']
-        #     role__id=''
-        # )
-        return User.objects.create_user(**validated_data)
+        UserRoleLink.objects.create(
+            id=uuid.uuid4(),
+            role_id=self.context.get("role_id"),
+            user=user
+        )
+
+        return user
 
     def validate(self, data):
         if data.get('password') != data.get('confirm_password'):
