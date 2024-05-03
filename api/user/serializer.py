@@ -2,7 +2,7 @@ import uuid
 
 from rest_framework import serializers
 
-from db.models import User
+from db.models import User, UserRoleLink
 
 
 class RestaurantCreateSerializer(serializers.ModelSerializer):
@@ -22,6 +22,12 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
         validated_data['id'] = uuid.uuid4()
         validated_data['username'] = validated_data['email']
         validated_data.pop('confirm_password')
+
+        # UserRoleLink.objects.create(
+        #     id=uuid.uuid4(),
+        #     user__id=validated_data['id']
+        #     role__id=''
+        # )
         return User.objects.create_user(**validated_data)
 
     def validate(self, data):

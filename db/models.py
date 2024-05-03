@@ -12,7 +12,6 @@ class User(AbstractUser):
     email = models.CharField(unique=True, max_length=200)
     phone = models.CharField(unique=True, max_length=15)
     password = models.CharField(max_length=200)
-    role = models.CharField(max_length=200, default='user')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,3 +26,22 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'user'
+
+
+class Role(models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'role'
+
+
+class UserRoleLink(models.Model):
+    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_role_link_role')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_role_link_user')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_role_link'
