@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate
+from django.db.models import F
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from api.restaurant.serializer import RestaurantCreateSerializer
-from db.models import Role, UserRoleLink
+from db.models import Role, UserRoleLink, RestaurantDetails
 from utils.permissions import TokenGenerate
 from utils.response import CustomResponse
 
@@ -58,3 +59,24 @@ class RestaurantLoginAPI(APIView):
             return CustomResponse(
                 general_message="login failed"
             ).get_failure_response()
+
+
+class RestaurantListAPI(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+
+        restaurant = RestaurantDetails.objects.all().values(
+            "description",
+            "location",
+            "rating",
+            resturent_id=F('restaurant__id'),
+            first_name=F('restaurant__first_name'),
+            last_name=F('restaurant__last_name'),
+            phone=F('restaurant__phone'),
+            email=F('restaurant__email'),
+            profile_pic=F('restaurant__profile_pic'),
+
+
+        )
+        return CustomResponse(response=restaurant).get_success_response()
