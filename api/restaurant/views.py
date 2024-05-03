@@ -3,7 +3,7 @@ from django.db.models import F
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from api.restaurant.serializer import RestaurantCreateSerializer
+from api.restaurant.serializer import RestaurantCreateSerializer, RestaurantListSerializer
 from db.models import Role, UserRoleLink, RestaurantDetails
 from utils.permissions import TokenGenerate
 from utils.response import CustomResponse
@@ -66,17 +66,10 @@ class RestaurantListAPI(APIView):
 
     def get(self, request):
 
-        restaurant = RestaurantDetails.objects.all().values(
-            "description",
-            "location",
-            "rating",
-            resturent_id=F('restaurant__id'),
-            first_name=F('restaurant__first_name'),
-            last_name=F('restaurant__last_name'),
-            phone=F('restaurant__phone'),
-            email=F('restaurant__email'),
-            profile_pic=F('restaurant__profile_pic'),
+        restaurant_details = RestaurantDetails.objects.all()
 
-
-        )
-        return CustomResponse(response=restaurant).get_success_response()
+        serializer_data = RestaurantListSerializer(
+            restaurant_details,
+            many=True
+        ).data
+        return CustomResponse(response=serializer_data).get_success_response()

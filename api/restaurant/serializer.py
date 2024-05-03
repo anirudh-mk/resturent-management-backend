@@ -55,3 +55,29 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError('Passwords do not match')
         return data
+
+
+class RestaurantListSerializer(serializers.ModelSerializer):
+    restaurant_id = serializers.CharField(source="restaurant.id")
+    title = serializers.SerializerMethodField()
+    email = serializers.CharField(source="restaurant.email")
+    phone = serializers.CharField(source="restaurant.phone")
+    profile_pic = serializers.CharField(source="restaurant.profile_pic")
+
+    class Meta:
+        model = RestaurantDetails
+        fields = [
+            "restaurant_id",
+            "title",
+            "email",
+            "phone",
+            "profile_pic",
+            "description",
+            "location",
+            "rating"
+        ]
+
+    def get_title(self, obj):
+        if not obj.restaurant.last_name:
+            return obj.restaurant.first_name
+        return obj.restaurant.first_name + " " + obj.restaurant.last_name
