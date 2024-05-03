@@ -57,3 +57,43 @@ class UserRoleLink(models.Model):
 
     class Meta:
         db_table = 'user_role_link'
+
+
+class Food(models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    profile_pic = models.ImageField(max_length=200, upload_to='food/', null=True, blank=True)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'food'
+
+
+class RestaurantFoodLink(models.Model):
+    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
+    restaurant = models.ForeignKey(RestaurantDetails, on_delete=models.CASCADE, related_name='restaurant_food_link_restaurant')
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='restaurant_food_link_food')
+    rating = models.CharField(max_length=20, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'restaurant_food_link'
+
+
+class Ingredients (models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'ingredients'
+
+
+class FoodIngredientsLink(models.Model):
+    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
+    Food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='food_ingredients_link_food')
+    ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name='food_ingredients_link_ingredients')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'food_ingredients_link'
