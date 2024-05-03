@@ -14,7 +14,6 @@ class CreateRestaurantAPI(APIView):
     def post(self, request):
 
         role_id = Role.objects.filter(title='RESTAURANT').first().id
-
         serializer = RestaurantCreateSerializer(
             data=request.data,
             context={

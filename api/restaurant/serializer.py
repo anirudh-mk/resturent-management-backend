@@ -44,7 +44,7 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
 
         RestaurantDetails.objects.create(
             id=uuid.uuid4(),
-            user=user,
+            restaurant=user,
             description=description,
             location=location,
         )
