@@ -23,7 +23,7 @@ class CreateRestaurantAPI(APIView):
             serializer.save()
 
             return CustomResponse(
-                general_message='User created successfully'
+                general_message='Restaurant created successfully'
             ).get_success_response()
 
         return CustomResponse(

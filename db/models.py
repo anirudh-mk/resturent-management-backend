@@ -28,6 +28,18 @@ class User(AbstractUser):
         db_table = 'user'
 
 
+class RestaurantDetails(models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    restaurant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='restaurant_detail_restaurant')
+    description = models.CharField(max_length=2000, null=True, blank=True)
+    location = models.CharField(max_length=2000, null=True, blank=True)
+    rating = models.CharField(max_length=20, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'restaurant_details'
+
+
 class Role(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     title = models.CharField(max_length=200)
