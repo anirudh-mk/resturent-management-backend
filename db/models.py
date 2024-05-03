@@ -12,6 +12,7 @@ class User(AbstractUser):
     email = models.CharField(unique=True, max_length=200)
     phone = models.CharField(unique=True, max_length=15)
     password = models.CharField(max_length=200)
+    role = models.CharField(max_length=200, default='user')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -26,4 +27,3 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'user'
-        
