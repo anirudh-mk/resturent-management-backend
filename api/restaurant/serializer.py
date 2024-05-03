@@ -12,6 +12,7 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "first_name",
+            "last_name",
             "email",
             "phone",
             "password",
@@ -21,6 +22,7 @@ class RestaurantCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['id'] = uuid.uuid4()
         validated_data['username'] = validated_data['email']
+        validated_data['role'] = 'restaurant'
         validated_data.pop('confirm_password')
         return User.objects.create_user(**validated_data)
 

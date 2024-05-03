@@ -1,7 +1,7 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from api.user.serializer import UserCreateSerializer
+from api.user.serializer import RestaurantCreateSerializer
 from utils.response import CustomResponse
 
 
@@ -10,7 +10,7 @@ class CreateUserAPI(APIView):
 
     def post(self, request):
 
-        serializer = UserCreateSerializer(
+        serializer = RestaurantCreateSerializer(
             data=request.data
         )
         if serializer.is_valid():
