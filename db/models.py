@@ -4,8 +4,6 @@ import uuid
 
 
 class User(AbstractUser):
-    date_joined = None
-
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
