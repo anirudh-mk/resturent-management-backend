@@ -2,7 +2,7 @@ import uuid
 
 from rest_framework import serializers
 
-from db.models import User, UserRoleLink, RestaurantDetails
+from db.models import User, UserRoleLink, RestaurantDetails, RestaurantFoodLink, FoodIngredientsLink
 
 
 class RestaurantCreateSerializer(serializers.ModelSerializer):
@@ -81,3 +81,37 @@ class RestaurantListSerializer(serializers.ModelSerializer):
         if not obj.restaurant.last_name:
             return obj.restaurant.first_name
         return obj.restaurant.first_name + " " + obj.restaurant.last_name
+
+
+class RestaurantFoodListSerializer(serializers.ModelSerializer):
+    food_id = serializers.CharField(source="food.id")
+    title = serializers.CharField(source="food.title")
+    image = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RestaurantFoodLink
+        fields = [
+            "food_id",
+            "title",
+            "image",
+            "description",
+            "rating",
+            "ingredients"
+        ]
+
+    def get_image(self, obj):
+        return obj.food.profile_pic if obj.food.profile_pic else None
+
+    def get_description(self, obj):
+        return obj.food.description if obj.food.description else None
+
+    def get_ingredients(self, obj):
+
+        food_ingredients_list = FoodIngredientsLink.objects.filter(
+            food=obj.food).values_list(
+            'ingredients__title',
+            flat=True
+        )
+        return food_ingredients_list
