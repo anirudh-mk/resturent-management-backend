@@ -63,6 +63,7 @@ class Food(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     profile_pic = models.ImageField(max_length=200, upload_to='food/', null=True, blank=True)
     title = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -91,7 +92,7 @@ class Ingredients (models.Model):
 
 class FoodIngredientsLink(models.Model):
     id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
-    Food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='food_ingredients_link_food')
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='food_ingredients_link_food')
     ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name='food_ingredients_link_ingredients')
     created_at = models.DateTimeField(auto_now_add=True)
 
