@@ -98,6 +98,7 @@ class RestaurantFoodListSerializer(serializers.ModelSerializer):
             "image",
             "description",
             "rating",
+            "price",
             "ingredients"
         ]
 

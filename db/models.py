@@ -75,6 +75,7 @@ class RestaurantFoodLink(models.Model):
     restaurant = models.ForeignKey(RestaurantDetails, on_delete=models.CASCADE, related_name='restaurant_food_link_restaurant')
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='restaurant_food_link_food')
     rating = models.CharField(max_length=20, null=True, blank=True)
+    price = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
