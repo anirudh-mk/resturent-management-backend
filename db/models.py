@@ -85,6 +85,7 @@ class RestaurantFoodLink(models.Model):
 class Ingredients (models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     title = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

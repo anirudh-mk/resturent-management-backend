@@ -2,7 +2,7 @@ import uuid
 
 from rest_framework import serializers
 
-from db.models import User, UserRoleLink, RestaurantDetails, RestaurantFoodLink, FoodIngredientsLink
+from db.models import User, UserRoleLink, RestaurantDetails, RestaurantFoodLink, FoodIngredientsLink, Ingredients
 
 
 class RestaurantCreateSerializer(serializers.ModelSerializer):
@@ -116,3 +116,25 @@ class RestaurantFoodListSerializer(serializers.ModelSerializer):
             flat=True
         )
         return food_ingredients_list
+
+
+class IngredientsCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredients
+        fields = [
+            "title",
+            "description"
+        ]
+
+    def create(self, validated_data):
+        return Ingredients.objects.create(**validated_data)
+
+
+class IngredientsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredients
+        fields = [
+            "id",
+            "title",
+            "description"
+        ]
