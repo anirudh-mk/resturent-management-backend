@@ -1,13 +1,13 @@
 from django.contrib.auth import authenticate
-from django.db.models import F
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from api.restaurant.serializer import RestaurantCreateSerializer, RestaurantListSerializer, \
     RestaurantFoodListSerializer, IngredientsCreateSerializer, IngredientsListSerializer
 from db.models import Role, UserRoleLink, RestaurantDetails, RestaurantFoodLink, Ingredients
-from utils.permissions import TokenGenerate, CustomizePermission
+from utils.permissions import TokenGenerate, CustomizePermission, role_required
 from utils.response import CustomResponse
+from utils.types import RoleType
 
 
 class CreateRestaurantAPI(APIView):
@@ -48,13 +48,11 @@ class RestaurantLoginAPI(APIView):
 
         user = authenticate(request, email=email, password=password)
         if user:
-            user_role_title = UserRoleLink.objects.filter(user=user).first().role.title
-            auth = TokenGenerate().generate(user)
+            role = UserRoleLink.objects.filter(user=user).first().role.title
+            auth = TokenGenerate().generate(user, role)
             return CustomResponse(
                 general_message="successfully login",
-                response=[auth, {
-                    "role": user_role_title
-                }],
+                response=auth,
             ).get_success_response()
         else:
             return CustomResponse(
@@ -108,8 +106,9 @@ class IngredientsCreateAPI(APIView):
 
 
 class IngredientsListAPI(APIView):
-    permission_classes = (AllowAny,)
+    authentication_classes = [CustomizePermission]
 
+    @role_required(RoleType.RESTAURANT.value,)
     def get(self, request):
         ingredients = Ingredients.objects.all()
         serializer = IngredientsListSerializer(
