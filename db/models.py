@@ -100,3 +100,22 @@ class FoodIngredientsLink(models.Model):
 
     class Meta:
         db_table = 'food_ingredients_link'
+
+
+class Category(models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'category'
+
+
+class FoodCategoryLink(models.Model):
+    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='food_category_link_food')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='food_category_link_category')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'food_category_link'

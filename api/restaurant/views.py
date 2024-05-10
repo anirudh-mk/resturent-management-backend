@@ -87,13 +87,14 @@ class RestaurantFoodListAPI(APIView):
             search_fields=[
                 "rating",
                 "price",
-                "food__title"
+                "food__title",
+                "food__food_category_link_food__category__id"
             ],
             sort_fields={
-                'price': 'price'
+                'price': 'price',
+                'rating': 'rating'
             },
         )
-
         serializer = RestaurantFoodListSerializer(
             paginated_queryset,
             many=True
@@ -131,3 +132,10 @@ class IngredientsListAPI(APIView):
         )
 
         return CustomResponse(response=serializer.data).get_failure_response()
+
+class All(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self,request,restaurant_id):
+        restaurant_food_link = RestaurantFoodLink.objects.filter(restaurant=restaurant_id).all().values('food__food_category_link_food__category__title')
+        return CustomResponse(response=restaurant_food_link).get_failure_response()

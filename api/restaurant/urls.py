@@ -9,4 +9,5 @@ urlpatterns = [
     path("food-list/<str:restaurant_id>/", views.RestaurantFoodListAPI.as_view()),
     path("create/ingredients/", views.IngredientsCreateAPI.as_view()),
     path("ingredients/list/", views.IngredientsListAPI.as_view()),
+    path("a/<str:restaurant_id>/", views.All.as_view()),
 ]
