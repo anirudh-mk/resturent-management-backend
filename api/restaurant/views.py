@@ -8,6 +8,7 @@ from db.models import Role, UserRoleLink, RestaurantDetails, RestaurantFoodLink,
 from utils.permissions import TokenGenerate, CustomizePermission, role_required
 from utils.response import CustomResponse
 from utils.types import RoleType
+from utils.utils import CommonUtils
 
 
 class CreateRestaurantAPI(APIView):
@@ -80,8 +81,21 @@ class RestaurantFoodListAPI(APIView):
     def get(self, request, restaurant_id):
         restaurant_food_link = RestaurantFoodLink.objects.filter(restaurant=restaurant_id).all()
 
-        serializer = RestaurantFoodListSerializer(
+        paginated_queryset = CommonUtils.search_and_sort(
             restaurant_food_link,
+            request,
+            search_fields=[
+                "rating",
+                "price",
+                "food__title"
+            ],
+            sort_fields={
+                'price': 'price'
+            },
+        )
+
+        serializer = RestaurantFoodListSerializer(
+            paginated_queryset,
             many=True
         )
 
