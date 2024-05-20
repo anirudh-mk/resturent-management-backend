@@ -24,6 +24,9 @@ class User(AbstractUser):
     def email_exists(cls, email):
         return cls.objects.filter(email=email).exists()
 
+    def __str__(self):
+        return self.email
+
     class Meta:
         db_table = 'user'
 
@@ -45,6 +48,9 @@ class Role(models.Model):
     title = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = 'role'
 
@@ -65,6 +71,9 @@ class Food(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         db_table = 'food'
@@ -88,6 +97,9 @@ class Ingredients (models.Model):
     description = models.CharField(max_length=1000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         db_table = 'ingredients'
 
@@ -106,6 +118,9 @@ class Category(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     title = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         db_table = 'category'
