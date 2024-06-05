@@ -34,10 +34,14 @@ class User(AbstractUser):
 class RestaurantDetails(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
     restaurant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='restaurant_detail_restaurant')
+    title = models.CharField(max_length=200)
     description = models.CharField(max_length=2000, null=True, blank=True)
     location = models.CharField(max_length=2000, null=True, blank=True)
     rating = models.CharField(max_length=20, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         db_table = 'restaurant_details'
@@ -48,8 +52,8 @@ class Role(models.Model):
     title = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.title
 
     class Meta:
         db_table = 'role'
@@ -79,12 +83,26 @@ class Food(models.Model):
         db_table = 'food'
 
 
+class Category(models.Model):
+    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = 'category'
+
+
 class RestaurantFoodLink(models.Model):
     id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
     restaurant = models.ForeignKey(RestaurantDetails, on_delete=models.CASCADE, related_name='restaurant_food_link_restaurant')
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='restaurant_food_link_food')
     rating = models.CharField(max_length=20, null=True, blank=True)
     price = models.CharField(max_length=200)
+    is_veg = models.BooleanField(default=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='restaurant_food_link_category')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -112,25 +130,3 @@ class FoodIngredientsLink(models.Model):
 
     class Meta:
         db_table = 'food_ingredients_link'
-
-
-class Category(models.Model):
-    id = models.CharField(primary_key=True, default=uuid.uuid4(), max_length=36)
-    title = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        db_table = 'category'
-
-
-class FoodCategoryLink(models.Model):
-    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4())
-    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='food_category_link_food')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='food_category_link_category')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'food_category_link'

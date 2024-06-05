@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, RestaurantDetails, Role, UserRoleLink, Food, RestaurantFoodLink, Ingredients, FoodIngredientsLink, Category, FoodCategoryLink
+from .models import User, RestaurantDetails, Role, UserRoleLink, Food, RestaurantFoodLink, Ingredients, FoodIngredientsLink, Category
 
 
 class UserModel(admin.ModelAdmin):
@@ -73,10 +73,3 @@ class CategoryModel(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryModel)
 
-
-class FoodCategoryLinkModel(admin.ModelAdmin):
-    list_display = ('id', 'food', 'category', 'created_at')
-    search_fields = ('id', 'food', 'category', 'created_at')
-
-
-admin.site.register(FoodCategoryLink, FoodCategoryLinkModel)
